@@ -23,3 +23,9 @@ After building the image, run the following command to start the container:
 docker run --env-file .env -p 5000:5000 csc468-backend
 </pre>
 This will start the Flask application within a Docker container, applying the environment variables from your .env file and making the app accessible at http://localhost:5000.
+
+## Docker 
+You can easily deploy this by pulling the image and building it from docker hub.
+<pre>
+docker pull maxwellmendenhall/strike-force-tracker
+</pre>
