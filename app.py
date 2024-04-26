@@ -92,6 +92,11 @@ async def send_data(player_data):
         async with session.post(MACHINE_LEARNING, json=player_data, headers=headers) as response:
             if response.status == 200:
                 print('Data sent successfully')
+                response_data = await response.json()
+                mse_attack = response_data.get("mseAttack")
+                mse_defend = response_data.get("mseDefend")
+                print(f"MSE Attack: {mse_attack}, MSE Defend: {mse_defend}")
+                return response_data
             else:
                 print('Failed to send data', await response.text())
 
@@ -105,10 +110,10 @@ def get_rainbow_stats():
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     player_data = loop.run_until_complete(sample(user_id_1, user_id_2))
-    loop.run_until_complete(send_data(player_data))
+    predictions = loop.run_until_complete(send_data(player_data))
     loop.close()
 
-    return jsonify(player_data)
+    return jsonify(player_data, predictions)
 
 
 if __name__ == '__main__':
