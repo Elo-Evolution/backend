@@ -4,6 +4,7 @@ from siegeapi import Auth
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 import os
+import bcrypt
 from database import Database
 
 app = Flask(__name__)
@@ -13,6 +14,42 @@ DATABASE = os.environ.get('DATABASE')
 MACHINE_LEARNING = os.environ.get('MACHINE_LEARNING')
 db = Database(app, DATABASE)
 app.extensions['database'] = db
+
+
+def initialize_database():
+    db.init_db()
+
+
+# endpoint
+@app.route('/signup', methods=['POST'])  # Added signup endpoint
+def signup():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+    db.query_db(
+        "INSERT INTO user (username, password_hash) VALUES (?, ?)",
+        [username, password_hash],
+    )
+
+    return jsonify({"success": True, "message": "User created successfully"}), 201
+
+
+# Endpoint for login
+@app.route('/login', methods=['POST'])  # Added login endpoint
+def login():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    user = db.query_db(
+        "SELECT * FROM user WHERE username = ?", [username], one=True
+    )
+
+    # Check password against hash
+    if user and bcrypt.checkpw(password.encode('utf-8'), user['password_hash']):
+        return jsonify({"success": True, "message": "Login successful"}), 200
+    else:
+        return jsonify({"success": False, "message": "Invalid username or password"}), 401
 
 
 @app.route('/')
@@ -86,7 +123,6 @@ async def sample(user_id1, user_id2):
 
 
 async def send_data(player_data):
-
     async with aiohttp.ClientSession() as session:
         headers = {'Content-Type': 'application/json'}
         async with session.post(MACHINE_LEARNING, json=player_data, headers=headers) as response:
@@ -113,8 +149,33 @@ def get_rainbow_stats():
     predictions = loop.run_until_complete(send_data(player_data))
     loop.close()
 
-    return jsonify(player_data, predictions)
+    sql = """
+    INSERT INTO user_stats (user_id, mse_attack, mse_defend)
+    VALUES (?, ?, ?)
+    ON CONFLICT(user_id) DO UPDATE SET
+        mse_attack = COALESCE(?, mse_attack),
+        mse_defend = COALESCE(?, mse_defend)
+    """
+
+    db.query_db(sql, [
+        user_id_1,
+        predictions.get('mseAttack'),
+        None,
+        predictions.get('mseAttack'),
+        None
+    ])
+
+    db.query_db(sql, [
+        user_id_2,
+        None,
+        predictions.get('mseDefend'),
+        None,
+        predictions.get('mseDefend')
+    ])
+
+    return jsonify(player_data=player_data, predictions=predictions)
 
 
 if __name__ == '__main__':
+    initialize_database()
     app.run(debug=True, host='0.0.0.0', port=3000)
