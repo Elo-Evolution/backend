@@ -2,12 +2,14 @@ import asyncio
 import aiohttp
 from siegeapi import Auth
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 import bcrypt
 from database import Database
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}})
 load_dotenv()
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default_secret_key')
 DATABASE = os.environ.get('DATABASE')
