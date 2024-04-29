@@ -23,15 +23,21 @@ def initialize_database():
 
 
 # endpoint
-@app.route('/signup', methods=['POST'])  # Added signup endpoint
+@app.route('/signup', methods=['POST'])
 def signup():
-    username = request.form.get('username')
-    password = request.form.get('password')
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    r6_user_id = data.get('r6Account')  # Use .get() to avoid KeyError
+
+    if not username or not password or not r6_user_id:
+        return jsonify({"success": False, "message": "Missing required fields"}), 400
+
     password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     db.query_db(
-        "INSERT INTO user (username, password_hash) VALUES (?, ?)",
-        [username, password_hash],
+        "INSERT INTO user (username, password_hash, r6_user_id) VALUES (?, ?, ?)",
+        [username, password_hash, r6_user_id],
     )
 
     return jsonify({"success": True, "message": "User created successfully"}), 201
