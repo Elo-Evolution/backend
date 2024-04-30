@@ -28,7 +28,7 @@ This will start the Flask application within a Docker container, applying the en
 ## Docker 
 You can easily deploy this by pulling the image and building it from docker hub.
 <pre>
-docker pull maxwellmendenhall/strike-force-tracker
+docker pull maxwellmendenhall/strike-force-backend
 </pre>
 
 ## Using the /get_rainbow_stats route
