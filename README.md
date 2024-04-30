@@ -37,6 +37,6 @@ and uid2 is the defenders user id. This route uses a 'GET' request.
 
 An example of how the query params look like are below. Remember to replace IP with actual IP and PORT with actual port.
 <pre>
-http://IP:3001/get_rainbow_stats?uid1=7e0f63df-a39b-44c5-8de0-d39a05926e77&uid2=7e0f63df-a39b-44c5-8de0-d39a05926e77
+http://ml-strike-force-service:3001/get_rainbow_stats?uid1=7e0f63df-a39b-44c5-8de0-d39a05926e77&uid2=7e0f63df-a39b-44c5-8de0-d39a05926e77
 </pre>
 
