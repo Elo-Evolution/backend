@@ -165,22 +165,6 @@ def get_rainbow_stats():
         mse_defend = COALESCE(?, mse_defend)
     """
 
-    db.query_db(sql, [
-        user_id_1,
-        predictions.get('mseAttack'),
-        None,
-        predictions.get('mseAttack'),
-        None
-    ])
-
-    db.query_db(sql, [
-        user_id_2,
-        None,
-        predictions.get('mseDefend'),
-        None,
-        predictions.get('mseDefend')
-    ])
-
     return jsonify(player_data=player_data, predictions=predictions)
 
 
