@@ -8,7 +8,7 @@ SECRET_KEY=your_secret_key
 DATABASE=path_to_your_database.db
 UBI_EMAIL=example@example.com
 UBI_PASSWORD=yourpassword
-MACHINE_LEARNING=http://IP:PORT/accept_data
+MACHINE_LEARNING=http://ml-strike-force-service:3001/accept_data
 </pre>
 
 ### Building the Docker Image
