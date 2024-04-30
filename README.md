@@ -21,7 +21,7 @@ This command builds a Docker image named csc468-backend based on the instruction
 ### Running the Docker Container
 After building the image, run the following command to start the container:
 <pre>
-docker run --env-file .env -p 5000:5000 csc468-backend
+docker run --env-file .env -p 3000:3000 csc468-backend
 </pre>
 This will start the Flask application within a Docker container, applying the environment variables from your .env file and making the app accessible at http://localhost:5000.
 
