@@ -14,14 +14,14 @@ MACHINE_LEARNING=http://IP:PORT/accept_data
 ### Building the Docker Image
 Run the following command in the terminal from the root directory of the project to build the Docker image:
 <pre>
-docker build -t csc468-backend .
+docker build -t strike-force-backend .
 </pre>
 This command builds a Docker image named csc468-backend based on the instructions in the Dockerfile.
 
 ### Running the Docker Container
 After building the image, run the following command to start the container:
 <pre>
-docker run --env-file .env -p 3000:3000 csc468-backend
+docker run --name backend --env-file .env -p 3000:3000 --network my-app-network strike-force-backend
 </pre>
 This will start the Flask application within a Docker container, applying the environment variables from your .env file and making the app accessible at http://localhost:5000.
 
@@ -37,6 +37,6 @@ and uid2 is the defenders user id. This route uses a 'GET' request.
 
 An example of how the query params look like are below. Remember to replace IP with actual IP and PORT with actual port.
 <pre>
-http://IP:PORT/get_rainbow_stats?uid1=7e0f63df-a39b-44c5-8de0-d39a05926e77&uid2=7e0f63df-a39b-44c5-8de0-d39a05926e77
+http://IP:3001/get_rainbow_stats?uid1=7e0f63df-a39b-44c5-8de0-d39a05926e77&uid2=7e0f63df-a39b-44c5-8de0-d39a05926e77
 </pre>
 
